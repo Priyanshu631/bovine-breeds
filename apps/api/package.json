@@ -1,0 +1,9 @@
+{
+  "name": "@bovine/api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "./Uvenv/bin/python -m uvicorn main:app --reload --port 8000",
+    "dev:win": ".\\Uvenv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8000"
+  }
+}

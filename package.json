@@ -1,0 +1,29 @@
+{
+  "name": "bovine-breeds",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "dev:api": "cd apps/api && ./Uvenv/bin/python -m uvicorn main:app --reload --port 8000",
+    "dev:api:win": "cd apps/api && .\\venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8000",
+    "dev:web": "cd apps/web && npm run dev",
+    "postinstall": "node scripts/setup-api.js"
+
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.9.3",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
