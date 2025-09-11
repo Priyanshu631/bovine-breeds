@@ -2,6 +2,11 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+if (process.env.VERCEL) {
+  console.log('Detected Vercel environment. Skipping Python API setup.');
+  process.exit(0);
+}
+
 const apiDir = path.join(__dirname, '..', 'apps', 'api');
 const requirementsFile = path.join(apiDir, 'requirements.txt');
 
