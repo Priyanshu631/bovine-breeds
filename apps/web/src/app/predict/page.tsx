@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilePicker } from "@/components/FilePicker";
 import { ArrowLeft } from "lucide-react";
+import Image from 'next/image';
 
 interface Prediction {
   breed: string;
@@ -15,6 +16,7 @@ interface Prediction {
 
 // A simple spinner component for the loading state
 const Spinner = () => (
+  // ... (Spinner component code remains the same)
   <svg
     className="animate-spin h-5 w-5 text-current"
     xmlns="http://www.w3.org/2000/svg"
@@ -36,6 +38,7 @@ const Spinner = () => (
     ></path>
   </svg>
 );
+
 
 export default function PredictPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -136,7 +139,14 @@ export default function PredictPage() {
                     exit={{ opacity: 0, y: -20 }}
                     className="text-center space-y-4"
                   >
-                    <img src={preview} alt="Image preview" className="mx-auto h-72 w-auto rounded-xl object-cover shadow-md" />
+                    {/* --- 2. REPLACE THE <img> TAG --- */}
+                    <Image 
+                      src={preview} 
+                      alt="Image preview" 
+                      width={400} 
+                      height={400}
+                      className="mx-auto h-72 w-auto rounded-xl object-cover shadow-md" 
+                    />
                      <div className="flex justify-center gap-4">
                       <Button onClick={handleSubmit} disabled={isLoading}>
                         {isLoading ? <><Spinner /> <span className="ml-2">Analyzing...</span></> : "Identify Breed"}
@@ -185,3 +195,4 @@ export default function PredictPage() {
     </motion.main>
   );
 }
+

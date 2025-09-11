@@ -34,7 +34,7 @@ export default function LandingPage() {
           </CardHeader>
           <CardContent className="p-8 space-y-6">
             <p className="text-lg text-gray-600">
-              This tool provides instant, data-driven breed suggestions to support Field Level Workers, ensuring data integrity for India's national livestock programs and the Bharat Pashudhan database.
+              This tool provides instant, data-driven breed suggestions to support Field Level Workers, ensuring data integrity for India&apos;s national livestock programs and the Bharat Pashudhan database.
             </p>
             <Link href="/predict" passHref>
               <motion.div
