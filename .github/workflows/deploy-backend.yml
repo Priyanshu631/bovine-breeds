@@ -30,10 +30,10 @@ jobs:
       - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run:
-          # Clone the Hugging Face Space repository. The repo name is your-hf-username/your-hf-space-name
-          # Replace 'bovine-api' if your space has a different name
-          git clone https://${{ secrets.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ secrets.HF_USERNAME }}/bovine-breed-api hf-space
+        # The 'run' keyword below is now at the correct indentation level
+        run: |
+          # Clone the Hugging Face Space repository. Replace 'bovine-api' if your space has a different name
+          git clone https://${{ secrets.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ secrets.HF_USERNAME }}/bovine-api hf-space
           
           cd hf-space
 
@@ -45,7 +45,6 @@ jobs:
           
           # Download the model file from GitHub Releases using the secret URL
           echo "Downloading model from ${{ secrets.MODEL_URL }}..."
-          # The -L flag is important to follow redirects from GitHub
           curl -L "${{ secrets.MODEL_URL }}" -o ./model.pth
           echo "Model downloaded."
 
@@ -65,3 +64,4 @@ jobs:
             git push
             echo "Successfully pushed to Hugging Face Space."
           fi
+
