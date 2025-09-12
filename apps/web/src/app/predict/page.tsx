@@ -25,11 +25,14 @@ export default function PredictPage() {
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // State for the low confidence warning
+  const [lowConfidenceWarning, setLowConfidenceWarning] = useState<string | null>(null);
 
   const handleFileChange = (selectedFile: File) => {
     setFile(selectedFile);
     setPrediction(null);
     setError(null);
+    setLowConfidenceWarning(null); // Reset warning on new file
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
@@ -42,6 +45,7 @@ export default function PredictPage() {
     setPreview(null);
     setPrediction(null);
     setError(null);
+    setLowConfidenceWarning(null); // Reset warning
   }
 
   const handleSubmit = async () => {
@@ -53,6 +57,7 @@ export default function PredictPage() {
     setIsLoading(true);
     setError(null);
     setPrediction(null);
+    setLowConfidenceWarning(null);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -68,7 +73,24 @@ export default function PredictPage() {
       }
 
       const data: Prediction = await response.json();
-      setPrediction(data);
+      
+      // --- DEBUGGING LOGS ---
+      console.log("API Response Data:", data);
+
+      const confidenceValue = parseFloat(data.confidence);
+      console.log("Parsed Confidence Value:", confidenceValue);
+
+      if (confidenceValue < 25) {
+        console.log("Confidence is LOW (< 25). Setting warning.");
+        setLowConfidenceWarning("Confidence Is Too Low,<br />Please Provide A Valid Indian Bovine Breed Image");
+        setPrediction(null);
+      } else {
+        console.log("Confidence is HIGH (>= 25). Setting prediction.");
+        setLowConfidenceWarning(null); // Clear previous warnings
+        setPrediction(data);
+      }
+      // ------------------------
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred.");
       console.error(err);
@@ -76,6 +98,7 @@ export default function PredictPage() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <ClientOnlyWrapper>
@@ -138,7 +161,16 @@ export default function PredictPage() {
                   )}
                 </AnimatePresence>
 
+                {/* Display regular errors in red */}
                 {error && <p className="text-center text-red-600 font-medium">{error}</p>}
+
+                {/* Display the low confidence warning in orange */}
+                {lowConfidenceWarning && (
+                <p 
+                  className="text-center text-orange-600 font-medium"
+                  dangerouslySetInnerHTML={{ __html: lowConfidenceWarning }}
+                />
+              )}
 
                 <AnimatePresence>
                   {prediction && (
