@@ -216,9 +216,6 @@ export default function PredictPage() {
                           <p className="text-3xl font-extrabold text-amber-900">
                             {prediction.breed}
                           </p>
-                          <p className="text-lg text-amber-800/80">
-                            Confidence: {prediction.confidence}
-                          </p>
                         </CardContent>
                       </Card>
                     </motion.div>

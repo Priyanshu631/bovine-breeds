@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Sprout } from 'lucide-react'; // Keeping Sprout for the button, it's a nice earthy touch
+import { Sprout,Newspaper,Apple } from 'lucide-react'; // Keeping Sprout for the button, it's a nice earthy touch
 import { ClientOnlyWrapper } from '@/components/ClientOnlyWrapper';
 
 export default function LandingPage() {
@@ -56,6 +56,15 @@ export default function LandingPage() {
                   <p className="text-amber-900/90">
                     This tool provides instant, data-driven breed suggestions to support Field Level Workers and enhance the Bharat Pashudhan database.
                   </p>
+                  <div className="flex flex-row gap-4 justify-center w-full">
+                    <Link href="/disease" passHref>
+                    <Button 
+                      size="lg" 
+                      className="mt-4 font-bold bg-amber-800 hover:bg-amber-900 text-white shadow-lg transition-all duration-200 transform hover:scale-105"
+                    >
+                      <Newspaper className="mr-2 h-5 w-5" /> Cattle Health Diagnosis
+                    </Button>
+                  </Link>
                   <Link href="/predict" passHref>
                     <Button 
                       size="lg" 
@@ -64,6 +73,15 @@ export default function LandingPage() {
                       <Sprout className="mr-2 h-5 w-5" /> Go to Prediction Tool
                     </Button>
                   </Link>
+                  <Link href="/nutrition" passHref>
+                    <Button 
+                      size="lg" 
+                      className="mt-4 font-bold bg-amber-800 hover:bg-amber-900 text-white shadow-lg transition-all duration-200 transform hover:scale-105"
+                    >
+                      <Apple className="mr-2 h-5 w-5" /> Nutritional Recommendations
+                    </Button>
+                  </Link>
+                  </div>
                 </motion.div>
               </CardContent>
             </Card>
