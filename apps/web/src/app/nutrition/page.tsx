@@ -63,7 +63,6 @@ const iconMap: { [key: string]: React.ElementType } = {
 export default function NutritionPage() {
   const [inputBreed, setInputBreed] = useState<string>("");
   const [displayedBreed, setDisplayedBreed] = useState<string | null>(null);
-  // FIX: Use the correct type for the recommendations state
   const [recommendations, setRecommendations] = useState<Recommendation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,11 +152,11 @@ export default function NutritionPage() {
                 <CardTitle className="text-4xl font-extrabold text-amber-950 font-serif">
                   Nutritional Recommendations
                 </CardTitle>
-                <CardDescription className="text-lg text-amber-900/80 pt-2 px-4">
+                <CardDescription className="text-lg text-amber-900/80 pt-2 px-4 max-w-sm mx-auto">
                   Find expert nutritional advice for any bovine breed.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="flex flex-col gap-6 p-6">
                 <form onSubmit={handleFetchRecommendations} className="flex flex-col sm:flex-row gap-4">
                   <div className="relative flex-grow">
                     <Input
@@ -214,7 +213,6 @@ export default function NutritionPage() {
                           <p className="text-xl font-extrabold text-amber-950 text-center">
                             For the {displayedBreed} breed:
                           </p>
-                          {/* FIX: Use the correct type for the map function parameter */}
                           {recommendations.map((rec: Recommendation, index: number) => (
                             <motion.div
                               key={index}
