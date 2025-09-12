@@ -160,7 +160,7 @@ export default function NutritionPage() {
                   Nutritional Recommendations
                 </CardTitle>
                 <CardDescription className="text-lg text-amber-900/80 pt-2">
-                  Find expert nutritional advice for any bovine breed.
+                  Find expert dietary advice for your bovine breed.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
