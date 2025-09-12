@@ -19,7 +19,6 @@ const BOVINE_BREEDS = [
     'Sahiwal', 'Surti', 'Tharparkar', 'Toda', 'Umblachery', 'Vechur'
 ];
 
-// The interface for the recommendation object
 interface Recommendation {
   icon: string;
   heading: string;
@@ -149,7 +148,8 @@ export default function NutritionPage() {
           >
             <Card className="shadow-2xl rounded-2xl border-2 border-amber-800 bg-amber-50/70 backdrop-blur-sm">
               <CardHeader className="text-center">
-                <CardTitle className="text-4xl font-extrabold text-amber-950 font-serif">
+                {/* FIX: Use responsive font size to prevent overflow */}
+                <CardTitle className="text-3xl sm:text-4xl font-extrabold text-amber-950 font-serif">
                   Nutritional Recommendations
                 </CardTitle>
                 <CardDescription className="text-lg text-amber-900/80 pt-2 px-4 max-w-sm mx-auto">
