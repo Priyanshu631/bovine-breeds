@@ -1,0 +1,29 @@
+# This workflow automates the deployment of the Next.js frontend to Vercel.
+
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+    paths:
+      # Only run this workflow if files inside the web app or root configs change
+      - 'apps/web/**' 
+      - 'package.json'
+      - 'turbo.json'
+      - '.github/workflows/deploy-frontend.yml'
+
+jobs:
+  deploy-vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: vercel/vercel-action@v1
+        with:
+          # For personal accounts, only the token and project ID are needed.
+          # The action will infer the user scope from the token.
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}

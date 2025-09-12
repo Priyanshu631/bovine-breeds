@@ -1,0 +1,67 @@
+# This workflow automates the deployment of the Python API to Hugging Face Spaces.
+
+name: Deploy Backend to Hugging Face
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+    paths:
+      # Only run this workflow if files inside the api app or this workflow file itself change
+      - 'apps/api/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  deploy-hf-space:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history to handle Git LFS correctly for the push to HF
+          fetch-depth: 0
+
+      - name: Set up Git LFS
+        run: |
+          curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+          sudo apt-get install git-lfs
+          git lfs install
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run:
+          # Clone the Hugging Face Space repository. The repo name is your-hf-username/your-hf-space-name
+          # Replace 'bovine-api' if your space has a different name
+          git clone https://${{ secrets.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ secrets.HF_USERNAME }}/bovine-breed-api hf-space
+          
+          cd hf-space
+
+          # Remove all old files to ensure a clean deployment, but keep the .git folder
+          git rm -rf . && git clean -fd
+
+          # Copy the new API files from our monorepo's apps/api directory
+          cp -R $GITHUB_WORKSPACE/apps/api/* .
+          
+          # Download the model file from GitHub Releases using the secret URL
+          echo "Downloading model from ${{ secrets.MODEL_URL }}..."
+          # The -L flag is important to follow redirects from GitHub
+          curl -L "${{ secrets.MODEL_URL }}" -o ./model.pth
+          echo "Model downloaded."
+
+          # Tell Git LFS to track the large .pth file
+          git lfs track "*.pth"
+          
+          # Configure git for the commit
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          
+          # Check if there are any changes to commit. If not, the deployment is skipped.
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit. Deployment skipped."
+          else
+            git commit -m "Deploy from GitHub Actions: ${{ github.sha }}"
+            git push
+            echo "Successfully pushed to Hugging Face Space."
+          fi
