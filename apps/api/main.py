@@ -44,7 +44,7 @@ app.add_middleware(
 )
 
 # Load the model and weights
-model_path = 'best_model_final.pth'
+model_path = 'model.pth'
 num_classes = len(CLASS_NAMES)
 
 # Recreate the exact model architecture using timm

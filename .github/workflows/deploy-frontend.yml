@@ -26,9 +26,10 @@ jobs:
           node-version: '20' # Use a recent LTS version of Node.js
           cache: 'npm'       # Enable caching for npm to speed up installs
 
-      - name: Install Dependencies
-        # This runs `npm install` from the root, which is correct for an npm workspace monorepo.
-        run: npm install
+      - name: Install Dependencies for Web App Only
+        # This command specifically targets the 'web' workspace,
+        # preventing the root postinstall script from running.
+        run: npm install --workspace=apps/web
 
       - name: Pull Vercel Environment Information
         # This step links the project and pulls down Vercel environment variables.
