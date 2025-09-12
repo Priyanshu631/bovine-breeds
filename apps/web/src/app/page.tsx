@@ -61,7 +61,7 @@ export default function LandingPage() {
                   <p className="text-amber-900/90">
                     This tool provides instant, data-driven breed suggestions to support Field Level Workers and enhance the Bharat Pashudhan database.
                   </p>
-                  <div className="flex flex-row gap-4 justify-center w-full">
+                  <div className="flex flex-col gap-4 justify-center w-full md:flex md:flex-row">
                     <Link href="/disease" passHref>
                       <Button 
                         size="lg" 
