@@ -58,8 +58,11 @@ export const FilePicker = ({ onFileChange }: FilePickerProps) => {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       className={`
-        border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors duration-200
-        ${isDragging ? 'border-primary bg-primary/10' : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'}
+        border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-200
+        ${isDragging 
+          ? 'border-amber-700 bg-amber-100/50' 
+          : 'border-amber-300 bg-amber-50 hover:border-amber-400 hover:bg-amber-100/60'
+        }
       `}
     >
       <input
@@ -69,10 +72,10 @@ export const FilePicker = ({ onFileChange }: FilePickerProps) => {
         onChange={handleFileSelect}
         accept="image/*"
       />
-      <div className="flex flex-col items-center gap-2 text-gray-500">
-        <UploadCloud className="w-10 h-10" />
-        <p className="font-semibold">Drag & drop an image here</p>
-        <p className="text-sm">or click to select a file</p>
+      <div className="flex flex-col items-center gap-3 text-amber-800">
+        <UploadCloud className="w-12 h-12 text-amber-700" />
+        <p className="font-semibold text-amber-900">Drag & drop an image here</p>
+        <p className="text-sm text-amber-800/80">or click to select a file</p>
       </div>
     </div>
   );
