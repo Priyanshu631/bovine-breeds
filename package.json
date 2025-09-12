@@ -10,7 +10,7 @@
     "dev:api": "cd apps/api && ./Uvenv/bin/python -m uvicorn main:app --reload --port 8000",
     "dev:api:win": "cd apps/api && .\\venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8000",
     "dev:web": "cd apps/web && npm run dev",
-    "postinstall": "node scripts/setup-api.js"
+    "setup:api": "node scripts/setup-api.js"
 
   },
   "devDependencies": {
