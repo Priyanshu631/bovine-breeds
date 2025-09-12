@@ -149,7 +149,7 @@ export default function PredictPage() {
                         height={400}
                         className="mx-auto h-72 w-auto rounded-xl object-cover shadow-md" 
                       />
-                       <div className="flex justify-center gap-4">
+                       <div className="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
                         <Button onClick={handleSubmit} disabled={isLoading}>
                           {isLoading ? <><Spinner /> <span className="ml-2">Analyzing...</span></> : "Identify Breed"}
                         </Button>
