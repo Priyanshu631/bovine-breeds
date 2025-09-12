@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 
+// The corrected type for the formData state.
+// Record<string, string> means an object where keys are strings and values are strings.
 export const DiseaseForm = () => {
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [output, setOutput] = useState<string>("");
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
+    // Corrected: The 'prev' state is now correctly typed
+    setFormData((prev: Record<string, string>) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -83,18 +86,18 @@ export const DiseaseForm = () => {
       {renderSelect("Vomiting", ["Yes","No"])}
       {renderSelect("Diarrhea", ["Yes","No"])}
       {renderSelect("Coughing", ["Yes","No"])}
-      {renderSelect("Labored_Breathing", ["Yes","No"])}
+      {renderSelect("Labored Breathing", ["Yes","No"])}
       {renderSelect("Lameness", ["Yes","No"])}
-      {renderSelect("Skin_Lesions", ["Yes","No"])}
-      {renderSelect("Nasal_Discharge", ["Yes","No"])}
-      {renderSelect("Eye_Discharge", ["Yes","No"])}
+      {renderSelect("Skin Lesions", ["Yes","No"])}
+      {renderSelect("Nasal Discharge", ["Yes","No"])}
+      {renderSelect("Eye Discharge", ["Yes","No"])}
 
       {renderSelect("Body Temperature", [
         "40.1°C","39.6°C","39.7°C","39.5°C","39.8°C","39.4°C",
         "39.9°C","39.1°C","39.3°C","40.0°C","39.2°C","39.0°C",
       ])}
 
-      {renderSelect("Heart_Rate", [
+      {renderSelect("Heart Rate", [
         90,70,80,75,82,79,81,85,83,84,86,87,78,77,95,100,
       ])}
 
