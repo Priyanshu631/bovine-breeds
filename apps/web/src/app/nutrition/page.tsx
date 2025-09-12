@@ -9,17 +9,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Dog, Bone, Leaf, Droplet, Star, Search } from "lucide-react";
 import { ClientOnlyWrapper } from '@/components/ClientOnlyWrapper';
 
-// A list of common Indian bovine breeds for autocomplete
 const BOVINE_BREEDS = [
     'Alambadi', 'Amritmahal', 'Ayrshire', 'Banni', 'Bargur', 'Bhadawari',
-    'Brown Swiss', 'Dangi', 'Deoni', 'Gir', 'Guernsey', 'Hallikar', 'Hariana',
-    'Holstein Friesian', 'Jaffrabadi', 'Jersey', 'Kangayam', 'Kankrej',
-    'Kasargod', 'Kenkatha', 'Kherigarh', 'Khillari', 'Krishna Valley',
-    'Malnad Gidda', 'Mehsana', 'Murrah', 'Nagori', 'Nagpuri', 'Nili Ravi',
-    'Nimari', 'Ongole', 'Pulikulam', 'Rathi', 'Red_Dane', 'Red Sindhi',
+    'Brown_Swiss', 'Dangi', 'Deoni', 'Gir', 'Guernsey', 'Hallikar', 'Hariana',
+    'Holstein_Friesian', 'Jaffrabadi', 'Jersey', 'Kangayam', 'Kankrej',
+    'Kasargod', 'Kenkatha', 'Kherigarh', 'Khillari', 'Krishna_Valley',
+    'Malnad_gidda', 'Mehsana', 'Murrah', 'Nagori', 'Nagpuri', 'Nili_Ravi',
+    'Nimari', 'Ongole', 'Pulikulam', 'Rathi', 'Red_Dane', 'Red_Sindhi',
     'Sahiwal', 'Surti', 'Tharparkar', 'Toda', 'Umblachery', 'Vechur'
 ];
 
+// The interface for the recommendation object
 interface Recommendation {
   icon: string;
   heading: string;
@@ -61,192 +61,193 @@ const iconMap: { [key: string]: React.ElementType } = {
 };
 
 export default function NutritionPage() {
-    const [inputBreed, setInputBreed] = useState<string>("");
-    const [displayedBreed, setDisplayedBreed] = useState<string | null>(null);
-    const [recommendations, setRecommendations] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [inputBreed, setInputBreed] = useState<string>("");
+  const [displayedBreed, setDisplayedBreed] = useState<string | null>(null);
+  // FIX: Use the correct type for the recommendations state
+  const [recommendations, setRecommendations] = useState<Recommendation[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-    const handleFetchRecommendations = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!inputBreed.trim()) {
-            setError("Please enter a bovine breed.");
-            return;
-        }
+  const handleFetchRecommendations = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputBreed.trim()) {
+      setError("Please enter a bovine breed.");
+      return;
+    }
 
-        setIsLoading(true);
-        setError(null);
-        setRecommendations(null);
-        setDisplayedBreed(null);
-        setSuggestions([]);
+    setIsLoading(true);
+    setError(null);
+    setRecommendations(null);
+    setDisplayedBreed(null);
+    setSuggestions([]);
 
-        try {
-            const response = await fetch(`/api/nutritional-recommendations`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ breed: inputBreed }),
-            });
+    try {
+      const response = await fetch(`/api/nutritional-recommendations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ breed: inputBreed }),
+      });
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch recommendations.");
-            }
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations.");
+      }
 
-            const data = await response.json();
-            setRecommendations(data.recommendations);
-            setDisplayedBreed(inputBreed);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An unknown error occurred.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      const data = await response.json();
+      setRecommendations(data.recommendations);
+      setDisplayedBreed(inputBreed);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unknown error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInputBreed(value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputBreed(value);
 
-        if (value.length > 0) {
-            const filteredSuggestions = BOVINE_BREEDS.filter(breed =>
-                breed.toLowerCase().startsWith(value.toLowerCase())
-            );
-            setSuggestions(filteredSuggestions);
-        } else {
-            setSuggestions([]);
-        }
-    };
+    if (value.length > 0) {
+      const filteredSuggestions = BOVINE_BREEDS.filter(breed =>
+        breed.toLowerCase().startsWith(value.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
 
-    const handleSuggestionClick = (breedName: string) => {
-        setInputBreed(breedName);
-        setSuggestions([]);
-    };
+  const handleSuggestionClick = (breedName: string) => {
+    setInputBreed(breedName);
+    setSuggestions([]);
+  };
 
-    const getIcon = (iconName: string) => {
-        const IconComponent = iconMap[iconName];
-        return IconComponent ? <IconComponent className="h-5 w-5 mr-2 text-amber-900" /> : null;
-    };
+  const getIcon = (iconName: string) => {
+    const IconComponent = iconMap[iconName];
+    return IconComponent ? <IconComponent className="h-5 w-5 mr-2 text-amber-900" /> : null;
+  };
 
-    return (
-        <ClientOnlyWrapper>
-            <motion.main
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="flex min-h-screen flex-col items-center justify-center p-8 relative overflow-hidden"
-                style={{
-                    backgroundColor: "#FFFBEB",
-                    backgroundImage: "url(/images/traditional-tile.png)",
-                    backgroundRepeat: "repeat",
-                    backgroundSize: "350px 350px",
-                    backgroundBlendMode: "multiply",
-                }}
-            >
-                <div className="w-full max-w-2xl z-10">
+  return (
+    <ClientOnlyWrapper>
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex min-h-screen flex-col items-center justify-center p-8 relative overflow-hidden"
+        style={{
+          backgroundColor: "#FFFBEB",
+          backgroundImage: "url(/images/traditional-tile.png)",
+          backgroundRepeat: "repeat",
+          backgroundSize: "350px 350px",
+          backgroundBlendMode: "multiply",
+        }}
+      >
+        <div className="w-full max-w-2xl z-10">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2, type: "spring" }}
+          >
+            <Card className="shadow-2xl rounded-2xl border-2 border-amber-800 bg-amber-50/70 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <CardTitle className="text-4xl font-extrabold text-amber-950 font-serif">
+                  Nutritional Recommendations
+                </CardTitle>
+                <CardDescription className="text-lg text-amber-900/80 pt-2 px-4">
+                  Find expert nutritional advice for any bovine breed.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <form onSubmit={handleFetchRecommendations} className="flex flex-col sm:flex-row gap-4">
+                  <div className="relative flex-grow">
+                    <Input
+                      type="text"
+                      placeholder="e.g., Sahiwal, Gir, Kankrej..."
+                      value={inputBreed}
+                      onChange={handleInputChange}
+                      className="w-full bg-white/50 border-amber-300 text-amber-950 placeholder:text-amber-800/60"
+                    />
+                    {suggestions.length > 0 && (
+                      <ul className="absolute z-20 w-full mt-1 bg-amber-50 border border-amber-300 rounded-md shadow-lg max-h-48 overflow-auto">
+                        {suggestions.map((suggestion, index) => (
+                          <li
+                            key={index}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                            className="px-4 py-2 cursor-pointer hover:bg-amber-200 text-amber-950"
+                          >
+                            {suggestion}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-amber-800 hover:bg-amber-900 text-white shadow-lg"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Spinner /> <span className="ml-2">Generating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-4 w-4 mr-2" /> Find Advice
+                      </>
+                    )}
+                  </Button>
+                </form>
+
+                {error && <p className="text-center text-red-600 font-medium">{error}</p>}
+
+                <AnimatePresence mode="wait">
+                  {recommendations && displayedBreed && (
                     <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.7, delay: 0.2, type: "spring" }}
+                      key="recommendations"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="space-y-4"
                     >
-                        <Card className="shadow-2xl rounded-2xl border-2 border-amber-800 bg-amber-50/70 backdrop-blur-sm">
-                            <CardHeader className="text-center">
-                                <CardTitle className="text-4xl font-extrabold text-amber-950 font-serif">
-                                    Nutritional Recommendations
-                                </CardTitle>
-                                {/* Corrected for better mobile text wrapping */}
-                                <CardDescription className="text-lg text-amber-900/80 pt-2 px-4">
-                                    Find expert dietary advice for your bovine breed.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <form onSubmit={handleFetchRecommendations} className="flex flex-col sm:flex-row gap-4">
-                                    <div className="relative flex-grow">
-                                        <Input
-                                            type="text"
-                                            placeholder="e.g., Sahiwal, Gir, Kankrej..."
-                                            value={inputBreed}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-white/50 border-amber-300 text-amber-950 placeholder:text-amber-800/60"
-                                        />
-                                        {suggestions.length > 0 && (
-                                            <ul className="absolute z-20 w-full mt-1 bg-amber-50 border border-amber-300 rounded-md shadow-lg max-h-48 overflow-auto">
-                                                {suggestions.map((suggestion, index) => (
-                                                    <li
-                                                        key={index}
-                                                        onClick={() => handleSuggestionClick(suggestion)}
-                                                        className="px-4 py-2 cursor-pointer hover:bg-amber-200 text-amber-950"
-                                                    >
-                                                        {suggestion}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
-                                    <Button
-                                        type="submit"
-                                        disabled={isLoading}
-                                        className="bg-amber-800 hover:bg-amber-900 text-white shadow-lg"
-                                    >
-                                        {isLoading ? (
-                                            <>
-                                                <Spinner /> <span className="ml-2">Generating...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Search className="h-4 w-4 mr-2" /> Find Advice
-                                            </>
-                                        )}
-                                    </Button>
-                                </form>
-
-                                {error && <p className="text-center text-red-600 font-medium">{error}</p>}
-
-                                <AnimatePresence mode="wait">
-                                    {recommendations && displayedBreed && (
-                                        <motion.div
-                                            key="recommendations"
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                            className="space-y-4"
-                                        >
-                                            <Card className="bg-amber-100 border-amber-300">
-                                                <CardContent className="pt-6 space-y-4">
-                                                    <p className="text-xl font-extrabold text-amber-950 text-center">
-                                                        For the {displayedBreed} breed:
-                                                    </p>
-                                                    {recommendations.map((rec: any, index: number) => (
-                                                        <motion.div
-                                                            key={index}
-                                                            initial={{ opacity: 0, x: -20 }}
-                                                            animate={{ opacity: 1, x: 0 }}
-                                                            transition={{ delay: 0.1 * index, duration: 0.3 }}
-                                                            className="flex items-start text-lg text-amber-900"
-                                                        >
-                                                            {getIcon(rec.icon)}
-                                                            <p>
-                                                                <span className="font-semibold text-amber-950">{rec.heading}:</span>{" "}
-                                                                {rec.text}
-                                                            </p>
-                                                        </motion.div>
-                                                    ))}
-                                                </CardContent>
-                                            </Card>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-
-                                <div className="text-center mt-4">
-                                    <Link href="/" passHref>
-                                        <Button variant="link" className="text-amber-900 hover:text-amber-950">
-                                            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </CardContent>
-                        </Card>
+                      <Card className="bg-amber-100 border-amber-300">
+                        <CardContent className="pt-6 space-y-4">
+                          <p className="text-xl font-extrabold text-amber-950 text-center">
+                            For the {displayedBreed} breed:
+                          </p>
+                          {/* FIX: Use the correct type for the map function parameter */}
+                          {recommendations.map((rec: Recommendation, index: number) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.1 * index, duration: 0.3 }}
+                              className="flex items-start text-lg text-amber-900"
+                            >
+                              {getIcon(rec.icon)}
+                              <p>
+                                <span className="font-semibold text-amber-950">{rec.heading}:</span>{" "}
+                                {rec.text}
+                              </p>
+                            </motion.div>
+                          ))}
+                        </CardContent>
+                      </Card>
                     </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="text-center mt-4">
+                  <Link href="/" passHref>
+                    <Button variant="link" className="text-amber-900 hover:text-amber-950">
+                      <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
+                    </Button>
+                  </Link>
                 </div>
-            </motion.main>
-        </ClientOnlyWrapper>
-    );
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </motion.main>
+    </ClientOnlyWrapper>
+  );
 }
