@@ -33,7 +33,7 @@ jobs:
         # The 'run' keyword below is now at the correct indentation level
         run: |
           # Clone the Hugging Face Space repository. Replace 'bovine-api' if your space has a different name
-          git clone https://${{ secrets.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ secrets.HF_USERNAME }}/bovine-api hf-space
+          git clone https://${{ secrets.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ secrets.HF_USERNAME }}/bovine-breed-api hf-space
           
           cd hf-space
 

@@ -1,6 +1,6 @@
-# This workflow automates the deployment of the Next.js frontend to Vercel.
+# This workflow uses the OFFICIAL Vercel CLI to deploy the npm-based frontend.
 
-name: Deploy Frontend to Vercel
+name: Deploy Frontend to Vercel (npm)
 
 on:
   push:
@@ -20,10 +20,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          # For personal accounts, only the token and project ID are needed.
-          # The action will infer the user scope from the token.
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          node-version: '20' # Use a recent LTS version of Node.js
+          cache: 'npm'       # Enable caching for npm to speed up installs
+
+      - name: Install Dependencies
+        # This runs `npm install` from the root, which is correct for an npm workspace monorepo.
+        run: npm install
+
+      - name: Pull Vercel Environment Information
+        # This step links the project and pulls down Vercel environment variables.
+        run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        # This step builds your Next.js application for production.
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        # This step deploys the artifacts created in the previous step to Vercel.
+        run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
